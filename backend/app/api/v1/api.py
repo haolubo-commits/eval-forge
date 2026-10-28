@@ -4,8 +4,16 @@ Mounts dataset management, synthetic test generator, and hallucination benchmark
 """
 
 from fastapi import APIRouter
+from app.api.v1.endpoints.datasets import router as datasets_router
+from app.api.v1.endpoints.synthetic import router as synthetic_router
+from app.api.v1.endpoints.benchmarks import router as benchmarks_router
 
 api_router = APIRouter()
+
+# Mount feature routers
+api_router.include_router(datasets_router)
+api_router.include_router(synthetic_router)
+api_router.include_router(benchmarks_router)
 
 
 @api_router.get("/status", tags=["System"])

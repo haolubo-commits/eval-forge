@@ -59,5 +59,6 @@ class EvaluationResultResponse(BaseModel):
 
 class BenchmarkComparisonResponse(BaseModel):
     dataset_id: str
-    runs: List[BenchmarkRunResponse]
-    metric_comparison: Dict[str, Dict[str, float]]
+    total_runs: int
+    runs: List[BenchmarkRunResponse] = Field(default_factory=list)
+    comparison: Dict[str, Dict[str, float]]
