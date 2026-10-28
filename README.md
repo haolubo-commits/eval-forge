@@ -50,9 +50,29 @@ graph TD
 ## 🌟 Key Features (4-Day Sprint Roadmap)
 
 - [x] **Day 1: Scaffolding & Architecture**: MongoDB 7.0 async schemas, Motor connection pooling, Pydantic v2 domain models (datasets, test cases, hallucination traps, benchmark runs), application configuration, and FastAPI lifecycle.
-- [ ] **Day 2: Core Logic & Evaluation APIs**: Synthetic question generation pipeline, adversarial counterfactual perturbations, multi-dimensional factual scoring algorithms (faithfulness, groundedness, relevance, negative constraint resilience), and benchmark runner endpoints.
+- [x] **Day 2: Core Logic & Evaluation APIs**: Synthetic question generation pipeline, adversarial counterfactual perturbations, multi-dimensional factual scoring algorithms (faithfulness, groundedness, relevance, negative constraint resilience), and benchmark runner endpoints.
 - [ ] **Day 3: Frontend UI / Evaluation Cockpit**: Modern React 18 dashboard featuring synthetic dataset builder, hallucination detection matrix, metric radar charts, side-by-side run comparisons, and citation attribution inspector.
 - [ ] **Day 4: Benchmarks, Seed Datasets & Docker Compose**: Automated integration test suites, real-world finance & biomedical seed benchmarks, multi-model evaluation leaderboard (GPT-4o vs Claude 3.5 vs DeepSeek), and containerized Docker Compose deployment.
+
+---
+
+## 🔌 API Endpoints Reference
+
+| Method | Endpoint | Description |
+| :--- | :--- | :--- |
+| `POST` | `/api/v1/datasets` | Create a new evaluation dataset |
+| `GET` | `/api/v1/datasets` | List all evaluation datasets with pagination |
+| `GET` | `/api/v1/datasets/{dataset_id}` | Retrieve dataset details and metadata |
+| `DELETE` | `/api/v1/datasets/{dataset_id}` | Delete dataset and cascaded test cases |
+| `POST` | `/api/v1/datasets/{dataset_id}/cases` | Append test case with ground truth & context |
+| `GET` | `/api/v1/datasets/{dataset_id}/cases` | Filter test cases by test type and difficulty |
+| `POST` | `/api/v1/synthetic/generate` | Trigger synthetic generation job with hallucination traps |
+| `GET` | `/api/v1/synthetic/jobs/{job_id}` | Get status and progress of synthetic generation job |
+| `POST` | `/api/v1/benchmarks/runs` | Execute automated hallucination benchmark run |
+| `GET` | `/api/v1/benchmarks/runs` | List benchmark execution runs |
+| `GET` | `/api/v1/benchmarks/runs/{run_id}` | Get benchmark run summary and aggregated metrics |
+| `GET` | `/api/v1/benchmarks/runs/{run_id}/results` | Query case-level evaluation results & hallucination types |
+| `GET` | `/api/v1/benchmarks/compare/{dataset_id}` | Multi-model cross-comparison metric matrix |
 
 ---
 
