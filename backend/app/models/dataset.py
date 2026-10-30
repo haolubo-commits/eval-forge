@@ -10,6 +10,7 @@ from pydantic import BaseModel, Field
 
 
 class TestType(str, Enum):
+    __test__ = False
     SINGLE_HOP = "single_hop"
     MULTI_HOP = "multi_hop"
     ADVERSARIAL = "adversarial"
@@ -33,6 +34,7 @@ class ContextChunk(BaseModel):
 
 
 class TestCase(BaseModel):
+    __test__ = False
     test_case_id: str
     dataset_id: str
     query: str
