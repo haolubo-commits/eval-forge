@@ -10,12 +10,19 @@ from app.schemas.benchmark import (
     BenchmarkRunCreateRequest,
     BenchmarkRunResponse,
     EvaluationResultResponse,
-    BenchmarkComparisonResponse
+    BenchmarkComparisonResponse,
+    LeaderboardResponse
 )
 
 router = APIRouter(prefix="/benchmarks", tags=["Hallucination Benchmarks"])
 benchmark_service = BenchmarkService()
 dataset_service = DatasetService()
+
+
+@router.get("/leaderboard", response_model=LeaderboardResponse)
+async def get_multi_model_leaderboard():
+    """Aggregates and ranks target LLMs across faithfulness, groundedness, and hallucination resilience."""
+    return await benchmark_service.get_model_leaderboard()
 
 
 @router.post("/runs", response_model=BenchmarkRunResponse, status_code=status.HTTP_201_CREATED)

@@ -62,3 +62,21 @@ class BenchmarkComparisonResponse(BaseModel):
     total_runs: int
     runs: List[BenchmarkRunResponse] = Field(default_factory=list)
     comparison: Dict[str, Dict[str, float]]
+
+
+class LeaderboardModelStats(BaseModel):
+    model: str
+    total_runs: int
+    total_evaluations: int
+    avg_faithfulness: float
+    avg_groundedness: float
+    avg_relevance: float
+    avg_hallucination_rate: float
+    avg_latency_ms: float
+    rank: int
+
+
+class LeaderboardResponse(BaseModel):
+    total_models: int
+    timestamp: datetime
+    leaderboard: List[LeaderboardModelStats]

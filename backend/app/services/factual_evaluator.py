@@ -63,10 +63,10 @@ class FactualEvaluator:
                 coverage = matched_words / len(sent_words)
 
                 # Check numeric integrity
-                sent_numbers = re.findall(r'\b\d+(\.\d+)?\b', sent)
+                sent_numbers = re.findall(r'\b\d+(?:\.\d+)?\b', sent)
                 num_mismatch = False
                 for num in sent_numbers:
-                    if num[0] not in combined_context:
+                    if num not in combined_context:
                         num_mismatch = True
                         break
 

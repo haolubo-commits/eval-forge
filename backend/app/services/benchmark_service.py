@@ -257,3 +257,51 @@ class BenchmarkService:
             "runs": runs,
             "comparison": comparison
         }
+
+    async def get_model_leaderboard(self) -> Dict[str, Any]:
+        """
+        Aggregates multi-model performance metrics across all benchmark runs
+        using MongoDB aggregation pipeline to compute global leaderboard standings.
+        """
+        if self.db is None:
+            return {"total_models": 0, "timestamp": datetime.utcnow(), "leaderboard": []}
+
+        pipeline = [
+            {"$match": {"status": BenchmarkStatus.COMPLETED.value}},
+            {
+                "$group": {
+                    "_id": "$target_model",
+                    "total_runs": {"$sum": 1},
+                    "total_evaluations": {"$sum": "$summary.total_cases"},
+                    "avg_faithfulness": {"$avg": "$summary.mean_faithfulness"},
+                    "avg_groundedness": {"$avg": "$summary.mean_groundedness"},
+                    "avg_relevance": {"$avg": "$summary.mean_relevance"},
+                    "avg_hallucination_rate": {"$avg": "$summary.hallucination_rate"},
+                    "avg_latency_ms": {"$avg": "$summary.mean_latency_ms"}
+                }
+            },
+            {"$sort": {"avg_faithfulness": -1, "avg_hallucination_rate": 1}}
+        ]
+
+        cursor = self.db["benchmark_runs"].aggregate(pipeline)
+        raw_items = await cursor.to_list(length=50)
+
+        leaderboard = []
+        for rank, item in enumerate(raw_items, start=1):
+            leaderboard.append({
+                "model": item["_id"],
+                "total_runs": item.get("total_runs", 0),
+                "total_evaluations": item.get("total_evaluations", 0),
+                "avg_faithfulness": round(item.get("avg_faithfulness", 0.0), 3),
+                "avg_groundedness": round(item.get("avg_groundedness", 0.0), 3),
+                "avg_relevance": round(item.get("avg_relevance", 0.0), 3),
+                "avg_hallucination_rate": round(item.get("avg_hallucination_rate", 0.0), 3),
+                "avg_latency_ms": round(item.get("avg_latency_ms", 0.0), 2),
+                "rank": rank
+            })
+
+        return {
+            "total_models": len(leaderboard),
+            "timestamp": datetime.utcnow(),
+            "leaderboard": leaderboard
+        }
